@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tic-Tac-Toe</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    text-align: center;
+    margin-top: 20px;
+    background: #f2f6fc;
+    color: #333;
+  }
+
+  h1 {
+    color: #4a90e2;
+  }
+
+  .mode-buttons {
+    margin: 15px;
+  }
+
+  .mode-buttons button {
+    background-color: #4a90e2;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .mode-buttons button:hover:not(.active):not(:disabled) {
+    background-color: #357ab8;
+  }
+
+  .mode-buttons button.active {
+    background-color: #50c878; /* green to show active */
+    cursor: default;
+  }
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    gap: 10px;
+    justify-content: center;
+    margin: 20px auto;
+    background: #fff;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+
+  .cell {
+    width: 100px;
+    height: 100px;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #e1e7f0;
+    color: #4a90e2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  .cell:hover {
+    background: #d3deee;
+    transform: scale(1.05);
+  }
+
+  .status {
+    margin-top: 20px;
+    font-size: 20px;
+    color: #444;
+  }
+</style>
+</head>
+<body>
+
+<h1>Tic-Tac-Toe</h1>
+
+<div class="mode-buttons">
+  <button id="twoPlayerBtn" onclick="startGame(false)">Two Players</button>
+  <button id="computerBtn" onclick="startGame(true)">Play vs Computer</button>
+</div>
+
+<div class="board" id="board"></div>
+<div class="status" id="status"></div>
+
+<script>
+const boardEl = document.getElementById('board');
+const statusEl = document.getElementById('status');
+const twoPlayerBtn = document.getElementById('twoPlayerBtn');
+const computerBtn = document.getElementById('computerBtn');
+
+let board = Array(9).fill('');
+let currentPlayer = 'X';
+let gameOver = false;
+let vsComputer = false;
+
+function setActiveModeButton() {
+  if (vsComputer) {
+    computerBtn.classList.add('active');
+    twoPlayerBtn.classList.remove('active');
+  } else {
+    twoPlayerBtn.classList.add('active');
+    computerBtn.classList.remove('active');
+  }
+}
+
+function startGame(vsComp) {
+  vsComputer = vsComp;
+  board = Array(9).fill('');
+  currentPlayer = 'X';
+  gameOver = false;
+  statusEl.textContent = `Current Turn: ${currentPlayer}`;
+  setActiveModeButton();
+  renderBoard();
+}
+
+function renderBoard() {
+  boardEl.innerHTML = '';
+  board.forEach((cell, idx) => {
+    const cellEl = document.createElement('div');
+    cellEl.classList.add('cell');
+    cellEl.textContent = cell;
+    cellEl.onclick = () => handleClick(idx);
+    boardEl.appendChild(cellEl);
+  });
+}
+
+function handleClick(idx) {
+  if (board[idx] || gameOver) return;
+
+  board[idx] = currentPlayer;
+  renderBoard();
+  if (checkWin(currentPlayer)) {
+    statusEl.textContent = `${currentPlayer} Wins! 🎉`;
+    gameOver = true;
+    return;
+  } else if (board.every(c => c)) {
+    statusEl.textContent = `It's a Draw! 🤝`;
+    gameOver = true;
+    return;
+  }
+
+  currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+  statusEl.textContent = `Current Turn: ${currentPlayer}`;
+
+  if (vsComputer && currentPlayer === 'O' && !gameOver) {
+    setTimeout(computerMove, 400);
+  }
+}
+
+function checkWin(player) {
+  const winPatterns = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+  return winPatterns.some(pattern =>
+    pattern.every(i => board[i] === player)
+  );
+}
+
+function computerMove() {
+  let available = board
+    .map((val, idx) => val === '' ? idx : null)
+    .filter(v => v !== null);
+
+  if (available.length === 0) return;
+
+  const move = available[Math.floor(Math.random() * available.length)];
+  handleClick(move);
+}
+
+startGame(false); // Default mode
+</script>
+
+</body>
+</html>
