@@ -4,104 +4,205 @@
 <meta charset="UTF-8">
 <title>Tic-Tac-Toe</title>
 <style>
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    text-align: center;
-    margin-top: 20px;
-    background: #f2f6fc;
-    color: #333;
-  }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: #fff;
+}
 
-  h1 {
-    color: #4a90e2;
-  }
+.container {
+  background: rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  backdrop-filter: blur(8px);
+}
 
-  .mode-buttons {
-    margin: 15px;
-  }
+h1 {
+  font-size: 2rem;
+  margin: 0;
+  color: #fff;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+}
 
-  .mode-buttons button {
-    background-color: #4a90e2;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    margin: 0 10px;
-    font-size: 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
+.mode-buttons {
+  margin: 15px 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
 
-  .mode-buttons button:hover:not(.active):not(:disabled) {
-    background-color: #357ab8;
-  }
+.mode-buttons button {
+  background-color: #fff;
+  color: #0072ff;
+  border: none;
+  padding: 8px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
 
-  .mode-buttons button.active {
-    background-color: #50c878; /* green to show active */
-    cursor: default;
-  }
+.mode-buttons button:hover:not(.active) {
+  background-color: #dbeafe;
+}
 
+.mode-buttons button.active {
+  background-color: #16a34a;
+  color: #fff;
+  cursor: default;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  gap: 8px;
+  justify-content: center;
+  margin: 20px auto;
+}
+
+.cell {
+  width: 100px;
+  height: 100px;
+  font-size: 2.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  background: #fff;
+  color: #0072ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 2px solid #93c5fd;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+}
+
+.cell:hover {
+  background: #dbeafe;
+  transform: scale(1.05);
+}
+
+.cell.win {
+  background: #bbf7d0 !important;
+  color: #065f46;
+  animation: blink 1s infinite;
+  border-color: #16a34a;
+}
+
+@keyframes blink {
+  0%, 100% { background-color: #bbf7d0; }
+  50% { background-color: #86efac; }
+}
+
+.status {
+  font-size: 1.2rem;
+  margin: 10px 0;
+  color: #fff;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+.status span {
+  font-weight: bold;
+  color: #ffe600;
+}
+
+.restart-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #f59e0b;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.restart-btn:hover {
+  background-color: #d97706;
+}
+
+.scoreboard {
+  display: flex;
+  justify-content: space-around;
+  margin: 15px 0;
+  font-size: 1rem;
+}
+
+.score {
+  background: rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 8px 12px;
+  flex: 1;
+  margin: 0 5px;
+}
+
+.score span {
+  font-weight: bold;
+  color: #ffe600;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 450px) {
   .board {
-    display: grid;
-    grid-template-columns: repeat(3, 100px);
-    gap: 10px;
-    justify-content: center;
-    margin: 20px auto;
-    background: #fff;
-    padding: 10px;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    grid-template-columns: repeat(3, 80px);
   }
-
   .cell {
-    width: 100px;
-    height: 100px;
-    font-size: 40px;
-    font-weight: bold;
-    cursor: pointer;
-    background: #e1e7f0;
-    color: #4a90e2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    transition: background 0.3s ease, transform 0.2s ease;
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
   }
-
-  .cell:hover {
-    background: #d3deee;
-    transform: scale(1.05);
-  }
-
-  .status {
-    margin-top: 20px;
-    font-size: 20px;
-    color: #444;
-  }
+}
 </style>
 </head>
 <body>
 
-<h1>Tic-Tac-Toe</h1>
+<div class="container">
+  <h1>🎮 Tic-Tac-Toe</h1>
 
-<div class="mode-buttons">
-  <button id="twoPlayerBtn" onclick="startGame(false)">Two Players</button>
-  <button id="computerBtn" onclick="startGame(true)">Play vs Computer</button>
+  <div class="mode-buttons">
+    <button id="twoPlayerBtn" onclick="startGame(false)">Two Players</button>
+    <button id="computerBtn" onclick="startGame(true)">Vs Computer</button>
+  </div>
+
+  <div class="scoreboard">
+    <div class="score">X: <span id="scoreX">0</span></div>
+    <div class="score">O: <span id="scoreO">0</span></div>
+    <div class="score">Draw: <span id="scoreDraw">0</span></div>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <div class="board" id="board"></div>
+
+  <button class="restart-btn" onclick="startGame(vsComputer)">Restart</button>
 </div>
-
-<div class="board" id="board"></div>
-<div class="status" id="status"></div>
 
 <script>
 const boardEl = document.getElementById('board');
 const statusEl = document.getElementById('status');
 const twoPlayerBtn = document.getElementById('twoPlayerBtn');
 const computerBtn = document.getElementById('computerBtn');
+const scoreXEl = document.getElementById('scoreX');
+const scoreOEl = document.getElementById('scoreO');
+const scoreDrawEl = document.getElementById('scoreDraw');
 
 let board = Array(9).fill('');
 let currentPlayer = 'X';
 let gameOver = false;
 let vsComputer = false;
+
+let scores = { X: 0, O: 0, Draw: 0 };
 
 function setActiveModeButton() {
   if (vsComputer) {
@@ -118,9 +219,9 @@ function startGame(vsComp) {
   board = Array(9).fill('');
   currentPlayer = 'X';
   gameOver = false;
-  statusEl.textContent = `Current Turn: ${currentPlayer}`;
   setActiveModeButton();
   renderBoard();
+  updateStatus(`Current Turn: <span>${currentPlayer}</span>`);
 }
 
 function renderBoard() {
@@ -139,22 +240,33 @@ function handleClick(idx) {
 
   board[idx] = currentPlayer;
   renderBoard();
+
   if (checkWin(currentPlayer)) {
-    statusEl.textContent = `${currentPlayer} Wins! 🎉`;
+    const winningCombo = getWinningPattern(currentPlayer);
+    highlightWinningCells(winningCombo);
+    updateStatus(`<span>${currentPlayer}</span> Wins! 🎉`);
+    updateScore(currentPlayer);
     gameOver = true;
     return;
-  } else if (board.every(c => c)) {
-    statusEl.textContent = `It's a Draw! 🤝`;
+  }
+
+  if (board.every(c => c)) {
+    updateStatus(`It's a Draw! 🤝`);
+    updateScore('Draw');
     gameOver = true;
     return;
   }
 
   currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-  statusEl.textContent = `Current Turn: ${currentPlayer}`;
+  updateStatus(`Current Turn: <span>${currentPlayer}</span>`);
 
   if (vsComputer && currentPlayer === 'O' && !gameOver) {
-    setTimeout(computerMove, 400);
+    setTimeout(computerMove, 300);
   }
+}
+
+function updateStatus(message) {
+  statusEl.innerHTML = message;
 }
 
 function checkWin(player) {
@@ -168,6 +280,32 @@ function checkWin(player) {
   );
 }
 
+function getWinningPattern(player) {
+  const winPatterns = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+  return winPatterns.find(pattern =>
+    pattern.every(i => board[i] === player)
+  );
+}
+
+function highlightWinningCells(pattern) {
+  if (!pattern) return;
+  pattern.forEach(index => {
+    const cell = boardEl.children[index];
+    cell.classList.add('win');
+  });
+}
+
+function updateScore(winner) {
+  scores[winner]++;
+  scoreXEl.textContent = scores['X'];
+  scoreOEl.textContent = scores['O'];
+  scoreDrawEl.textContent = scores['Draw'];
+}
+
 function computerMove() {
   let available = board
     .map((val, idx) => val === '' ? idx : null)
@@ -179,7 +317,7 @@ function computerMove() {
   handleClick(move);
 }
 
-startGame(false); // Default mode
+startGame(false); // default
 </script>
 
 </body>
